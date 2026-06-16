@@ -1,0 +1,10 @@
+# Applied against the upstream integration-appletv checkout (the build context).
+.git
+.github
+.idea
+dist
+artifacts
+**/__pycache__
+*.pyc
+.venv
+venv
