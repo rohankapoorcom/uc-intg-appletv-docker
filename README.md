@@ -21,12 +21,11 @@ or Docker), reachable by the Remote over a fixed WebSocket URL.
 ## Image
 
 ```
-ghcr.io/<owner>/uc-intg-appletv:<version>   # e.g. :0.22.2
-ghcr.io/<owner>/uc-intg-appletv:latest
+ghcr.io/rohankapoorcom/uc-intg-appletv:<version>   # e.g. :0.22.2
+ghcr.io/rohankapoorcom/uc-intg-appletv:latest
 ```
 
-`<owner>` is this repository's owner (lowercased). `<version>` is the upstream
-release tag without the leading `v`.
+`<version>` is the upstream release tag without the leading `v`.
 
 ## How the build works
 
@@ -76,7 +75,7 @@ docker run -d \
   -e UC_DISABLE_MDNS_PUBLISH=true \
   -p 9090:9090 \
   -v "$(pwd)/config:/config" \
-  ghcr.io/<owner>/uc-intg-appletv:latest
+  ghcr.io/rohankapoorcom/uc-intg-appletv:latest
 ```
 
 Then register the driver on the Remote (replace host/PIN/token), using a
