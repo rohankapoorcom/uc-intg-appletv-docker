@@ -4,10 +4,23 @@
 # (unfoldedcircle/integration-appletv) at a tagged release. The build context is
 # the upstream tree, not this repo.
 #
+# Multi-stage: the builder stage uses the full python image (which ships a C/C++
+# toolchain) so native dependencies without prebuilt wheels (e.g. miniaudio on
+# linux/arm64) can compile. The runtime stage stays on the slim image with no
+# compiler.
+#
 # driver_id handling (HASS pattern): the upstream driver.json is shipped
 # UNCHANGED (driver_id: appletv). External deployments register a distinct
 # driver_id (e.g. appletv_external) on the Remote via the Core-API and disable
 # mDNS (UC_DISABLE_MDNS_PUBLISH=true), pointing the Remote at a fixed wss:// URL.
+
+FROM python:3.11-bullseye AS builder
+
+WORKDIR /app
+COPY requirements.txt .
+# Install into a relocatable prefix that is copied into the runtime stage.
+RUN pip3 install --no-cache-dir --prefix=/install -r requirements.txt
+
 FROM python:3.11-slim-bullseye
 
 WORKDIR /app
@@ -17,8 +30,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends gettext make \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip3 install --no-cache-dir --upgrade -r requirements.txt
+# Python dependencies built in the builder stage (matches /usr/local layout).
+COPY --from=builder /install /usr/local
 
 ARG CONFIG_PATH=/config
 ENV UC_CONFIG_HOME=$CONFIG_PATH
