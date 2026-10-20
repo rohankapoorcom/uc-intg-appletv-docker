@@ -14,14 +14,14 @@
 # driver_id (e.g. appletv_external) on the Remote via the Core-API and disable
 # mDNS (UC_DISABLE_MDNS_PUBLISH=true), pointing the Remote at a fixed wss:// URL.
 
-FROM python:3.11-bullseye AS builder
+FROM python:3.11-bookworm AS builder
 
 WORKDIR /app
 COPY requirements.txt .
 # Install into a relocatable prefix that is copied into the runtime stage.
 RUN pip3 install --no-cache-dir --prefix=/install -r requirements.txt
 
-FROM python:3.11-slim-bullseye
+FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 
